@@ -12,10 +12,9 @@ import Footer from '../components/Footer';
 function Mypage() {
   const initialState = {
     nickname: '',
-    email: ''
+    email: '',
+    userImgUrl: ''
   };
-
-  const [imageUpload, setImageUpload] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(initialState);
@@ -33,10 +32,11 @@ function Mypage() {
 
         const fetchData = async () => {
           const snapUser = await getDoc(doc(db, 'users', uid));
+          console.log('snap : ', snapUser);
 
           if (snapUser.exists()) {
-            // console.log(snapUser.data());
             setUser(snapUser.data());
+            console.log('user', user);
           } else {
             console.log('No such document');
           }
@@ -47,21 +47,22 @@ function Mypage() {
     });
   }, []);
 
-  const handleFileSelect = async (event) => {
-    await setSelectedFile(event.target.files[0]);
+  const uploadHandler = (event) => {
+    handleFileSelect(event.target.files[0]);
+  };
 
-    const imageRef = ref(storage, `forder/${uuid()}`);
-    await uploadBytes(imageRef, selectedFile);
-
+  const handleFileSelect = async (file) => {
+    const imageRef = ref(storage, `folder/${user.email}`);
+    await uploadBytes(imageRef, file);
+    // 스토리지에 저장된 url 불러와서, 저장
     const downloadURL = await getDownloadURL(imageRef);
-    await setUploadImgUrl(downloadURL);
-    console.log('imgURL: ', downloadURL);
 
-    useEffect(() => {});
-    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    console.log('1', user);
+    await setDoc(doc(db, 'users', auth.currentUser?.uid), {
       ...user,
       userImgUrl: downloadURL
     });
+    window.location.reload();
   };
 
   return (
@@ -78,8 +79,19 @@ function Mypage() {
         {isOpen && <Login setIsOpen={setIsOpen} />}
         <Inner>
           <ProfileWrapper>
-            <ProfileImg></ProfileImg>
-            <input onClick={handleFileSelect} type="file"></input>
+            <FigureImg>
+              <ProfileLabel htmlFor="input-file">
+                <ProfileImg src={user.userImgUrl} />
+              </ProfileLabel>
+            </FigureImg>
+
+            <input
+              id="input-file"
+              type="file"
+              accept="image/jpg, image/jpeg, image/png"
+              onChange={uploadHandler}
+              style={{ display: 'none' }}
+            ></input>
             <ProfileName>{user.nickname}</ProfileName>
             <ProfileId>{user.email}</ProfileId>
             <ProfileEditButton>설정</ProfileEditButton>
@@ -125,16 +137,25 @@ const ProfileWrapper = styled.div`
   text-align: center;
 `;
 
-const ProfileImg = styled.div`
+const FigureImg = styled.div`
   width: 90px;
   height: 90px;
-  background-image: url();
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: #efefef;
+  overflow: hidden;
+  object-fit: cover;
   border-radius: 100%;
   margin: 0 auto;
+`;
+
+const ProfileLabel = styled.label`
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+`;
+
+const ProfileImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ProfileName = styled.h2`
