@@ -7,6 +7,7 @@ import { auth, db, storage } from '../firebase';
 import { addDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Footer from '../components/Footer';
 
 function Mypage() {
   const initialState = {
@@ -102,6 +103,7 @@ function Mypage() {
           </FeedWrapper>
         </Inner>
       </Layout>
+      <Footer />
     </>
   );
 }
@@ -109,6 +111,7 @@ function Mypage() {
 const Layout = styled.div`
   width: 100%;
   height: 100%;
+  margin-bottom: 150px;
 `;
 
 const Inner = styled.div`
