@@ -13,7 +13,17 @@ function Mypage() {
   const initialState = {
     nickname: '',
     email: '',
-    userImgUrl: ''
+    userImg: ''
+  };
+
+  const contentState = {
+    comments: '',
+    desc: '',
+    imgUrl: '',
+    title: '',
+    uid: '',
+    userImg: '',
+    userNickname: ''
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -32,11 +42,9 @@ function Mypage() {
 
         const fetchData = async () => {
           const snapUser = await getDoc(doc(db, 'users', uid));
-          console.log('snap : ', snapUser);
 
           if (snapUser.exists()) {
             setUser(snapUser.data());
-            console.log('user', user);
           } else {
             console.log('No such document');
           }
@@ -57,11 +65,11 @@ function Mypage() {
     // 스토리지에 저장된 url 불러와서, 저장
     const downloadURL = await getDownloadURL(imageRef);
 
-    console.log('1', user);
     await setDoc(doc(db, 'users', auth.currentUser?.uid), {
       ...user,
-      userImgUrl: downloadURL
+      userImg: downloadURL
     });
+
     window.location.reload();
   };
 
@@ -81,7 +89,7 @@ function Mypage() {
           <ProfileWrapper>
             <FigureImg>
               <ProfileLabel htmlFor="input-file">
-                <ProfileImg src={user.userImgUrl} />
+                <ProfileImg src={user.userImg} />
               </ProfileLabel>
             </FigureImg>
 
@@ -94,7 +102,7 @@ function Mypage() {
             ></input>
             <ProfileName>{user.nickname}</ProfileName>
             <ProfileId>{user.email}</ProfileId>
-            <ProfileEditButton>설정</ProfileEditButton>
+            {/* <ProfileEditButton>설정</ProfileEditButton> */}
           </ProfileWrapper>
 
           <FeedWrapper>
@@ -103,14 +111,7 @@ function Mypage() {
             </FeedTitle>
 
             <FeedCardWrapper>
-              <FeedCard>
-                <FeedCardFigure>
-                  <FeedCardImg></FeedCardImg>
-                  <FeedCardImgOverlay></FeedCardImgOverlay>
-                </FeedCardFigure>
-
-                <FeedCardTitle>미니멀리즘을 추구하는 조명</FeedCardTitle>
-              </FeedCard>
+              <div>hello world</div>
             </FeedCardWrapper>
           </FeedWrapper>
         </Inner>
