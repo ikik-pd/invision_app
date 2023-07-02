@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../firebase';
@@ -6,13 +6,11 @@ import uuid from 'react-uuid';
 import * as Styled from './Post.styles';
 import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Login from '../../components/Login';
-import Header from '../../components/Header';
-import left_icon from '../../assets/img/left_icon.png';
-import { LeftBtn } from '../Detail/Detail.styles';
 
 function Post() {
+  const params = useParams();
   const [contents, setContents] = useState([]);
   const [user, setUser] = useState({
     //닉네임이나 이미지 설정 안했을 때 초기값 세팅
@@ -25,6 +23,7 @@ function Post() {
   const [desc, setDesc] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadImgUrl, setUploadImgUrl] = useState(null);
+  // const [content, setContent] = useState();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -99,11 +98,11 @@ function Post() {
     }; //-->처음에만 댓글 빈배열
 
     setContents(newContent);
+
     setTitle('');
     setDesc('');
 
     const collectionRef = collection(db, 'contents');
-
     await addDoc(collectionRef, newContent);
   };
 
@@ -128,6 +127,7 @@ function Post() {
     //파일 URL 가져오기
     const downloadURL = await getDownloadURL(imageRef);
     console.log('downloadURL', downloadURL);
+
     setUploadImgUrl(downloadURL);
   };
 
@@ -138,73 +138,67 @@ function Post() {
   // };
 
   return (
-    <>
-      <Header />
-      <Styled.Layout>
-        <Link to={'/'}>
-          <LeftBtn src={left_icon} alt="뒤로가기" />
-        </Link>
-        {isOpen && <Login setIsOpen={setIsOpen} />}
-        <Styled.Container>
-          <>
-            <div style={{ width: '40%' }}>
-              <Styled.PhotoBox>
-                <Styled.UploadPhoto>
-                  <Styled.FileButton htmlFor="input-file">클릭하여 파일 선택</Styled.FileButton>
-                  <input type="file" onChange={handleFileSelect} id="input-file" style={{ display: 'none' }} />
-                </Styled.UploadPhoto>
-              </Styled.PhotoBox>
-              <Styled.UploadBox>
-                <Styled.UploadButton onClick={handleUpload}>파일 업로드</Styled.UploadButton>
-              </Styled.UploadBox>
-            </div>
+    <Styled.Layout>
+      {isOpen && <Login setIsOpen={setIsOpen} />}
+      <Styled.Container>
+        <>
+          <div style={{ width: '40%' }}>
+            <Styled.PhotoBox>
+              <Styled.UploadPhoto>
+                <Styled.FileButton htmlFor="input-file">클릭하여 파일 선택</Styled.FileButton>
+                <input type="file" onChange={handleFileSelect} id="input-file" style={{ display: 'none' }} />
+              </Styled.UploadPhoto>
+            </Styled.PhotoBox>
+            <Styled.UploadBox>
+              <Styled.UploadButton onClick={handleUpload}>파일 업로드</Styled.UploadButton>
+            </Styled.UploadBox>
+          </div>
 
-            <Styled.TextBox>
-              <Styled.SmallTextBox>
-                <Styled.ContentBox>
-                  <Styled.UserImgBox>
-                    <Styled.UserImg src={user.userImgUrl} />
-                  </Styled.UserImgBox>
-                  <h1>{user.nickname}</h1>
-                </Styled.ContentBox>
-                <div>
-                  <form
-                    onSubmit={function (event) {
-                      event.preventDefault();
-                    }}
-                  >
-                    <Styled.ContentTitle>
-                      <Styled.ContentInputTitle
-                        type="text"
-                        placeholder="Add title"
-                        value={title}
-                        name="title"
-                        onChange={onChangeTitle}
-                        required
-                      />
-                    </Styled.ContentTitle>
-                    <Styled.ContentDesc>
-                      <Styled.ContentInputDesc
-                        type="text"
-                        placeholder="Add description"
-                        value={desc}
-                        name="desc"
-                        onChange={onChangeDesc}
-                      />
-                    </Styled.ContentDesc>
-                    <Styled.ButtonBox>
-                      <Styled.AddButton onClick={addContent}>저장</Styled.AddButton>
-                    </Styled.ButtonBox>
-                  </form>
-                </div>
-                {/* <ContentTitle>{content.title}</ContentTitle>
+          <Styled.TextBox>
+            <Styled.SmallTextBox>
+              <Styled.ContentBox>
+                <Styled.UserImgBox>
+                  <Styled.UserImg src={user.userImgUrl} />
+                </Styled.UserImgBox>
+                <h1>{user.nickname}</h1>
+              </Styled.ContentBox>
+              <div>
+                <form
+                  onSubmit={function (event) {
+                    event.preventDefault();
+                  }}
+                >
+                  <Styled.ContentTitle>
+                    <Styled.ContentInputTitle
+                      type="text"
+                      placeholder="Add title"
+                      value={title}
+                      name="title"
+                      onChange={onChangeTitle}
+                      required
+                    />
+                  </Styled.ContentTitle>
+                  <Styled.ContentDesc>
+                    <Styled.ContentInputDesc
+                      type="text"
+                      placeholder="Add description"
+                      value={desc}
+                      name="desc"
+                      onChange={onChangeDesc}
+                    />
+                  </Styled.ContentDesc>
+                  <Styled.ButtonBox>
+                    <Styled.AddButton onClick={addContent}>저장</Styled.AddButton>
+                  </Styled.ButtonBox>
+                </form>
+              </div>
+              {/* <ContentTitle>{content.title}</ContentTitle>
               <ContentDesc>{content.desc}</ContentDesc> */}
-              </Styled.SmallTextBox>
-            </Styled.TextBox>
-          </>
-        </Styled.Container>
-      </Styled.Layout>
-    </>
+            </Styled.SmallTextBox>
+          </Styled.TextBox>
+        </>
+      </Styled.Container>
+    </Styled.Layout>
   );
 }
 

@@ -6,7 +6,6 @@ import { auth } from '../firebase';
 function Dropdown() {
   const logOut = async (event) => {
     event.preventDefault();
-
     try {
       const userLogout = await signOut(auth);
       console.log('로그아웃 완료');

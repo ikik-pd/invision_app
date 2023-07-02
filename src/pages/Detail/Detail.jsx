@@ -3,21 +3,96 @@ import React from 'react';
 import { updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { Link, useParams } from 'react-router-dom';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import * as Styled from './Detail.styles';
+import { styled } from 'styled-components';
+import myImage from '../Detail/60969.png';
 import Header from '../../components/Header';
+import { useNavigate, Link } from 'react-router-dom';
 import left_icon from '../../assets/img/left_icon.png';
+import { LeftBtn } from '../Detail/Detail.styles';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function ShowDetail() {
-  // const navigate = useNavigate();
   const params = useParams(); //-> /뒤에 있는 정보(디테일에 대한 정보)를 가져다 쓰기 위해서 파람스 사용
+  const navigate = useNavigate();
 
-  // console.log(params);
   const [content, setContent] = useState(null);
   const [user, setUser] = useState(null);
+
+  // 수정&삭제 버튼 모음
+  const [drawer, setDrawer] = useState(false);
+  const drawerHandler = () => {
+    setDrawer(true);
+  };
+
+  // 삭제
+
+  const delPost = async (id) => {
+    try {
+      const forReal = window.confirm('삭제할까요?');
+      if (!forReal) return false;
+
+      const delContents = await getDoc(doc(db, 'contents', params.id));
+      const user = auth.currentUser.uid;
+      if (delContents.exists()) {
+        if (user === delContents.data().uid) {
+          alert('삭제 완료');
+        } else {
+          // 본인이 작성하지 않았을 때 알럿창이 안뜸
+          window.alert('로그인해 주세요.');
+        }
+        setContent(delContents.data());
+      }
+
+      const postDel = doc(db, 'contents', id);
+      await deleteDoc(postDel);
+      navigate('/');
+    } catch (error) {
+      window.alert('로그인해 주세요.');
+    }
+  };
+
+  // 수정
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  // 수정&삭제 버튼 모음
+  const [drawer, setDrawer] = useState(false);
+  const drawerHandler = () => {
+    setDrawer(true);
+  };
+
+  // 삭제
+
+  const delPost = async (id) => {
+    try {
+      const forReal = window.confirm('삭제할까요?');
+      if (!forReal) return false;
+
+      const delContents = await getDoc(doc(db, 'contents', params.id));
+      const user = auth.currentUser.uid;
+      if (delContents.exists()) {
+        if (user === delContents.data().uid) {
+          alert('삭제 완료');
+        } else {
+          // 본인이 작성하지 않았을 때 알럿창이 안뜸
+          window.alert('로그인해 주세요.');
+        }
+        setContent(delContents.data());
+      }
+
+      const postDel = doc(db, 'contents', id);
+      await deleteDoc(postDel);
+      navigate('/');
+    } catch (error) {
+      window.alert('로그인해 주세요.');
+    }
+  };
+
+  // 수정
+  const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +153,7 @@ function ShowDetail() {
       <Header />
       <Styled.Layout>
         <Link to={'/'}>
-          <Styled.LeftBtn src={left_icon} alt="뒤로가기" />
+          <LeftBtn src={left_icon} alt="뒤로가기" />
         </Link>
         <Styled.Container>
           {/* 컨텐츠가 null이 아닐때 */}
@@ -91,11 +166,35 @@ function ShowDetail() {
               <Styled.TextBox>
                 <Styled.SmallTextBox>
                   <Styled.UserBox>
-                    <Styled.UserImgBox>
-                      <Styled.UserImg src={content.userImgUrl} />
-                    </Styled.UserImgBox>
-
-                    <h1>{content.userNickname}</h1>
+                    <div
+                      styled={{
+                        // display: "flex",
+                        border: '1px solid black',
+                        width: '200px'
+                      }}
+                    >
+                      <Styled.UserImgBox>
+                        <Styled.UserImg src={content.userImgUrl} />
+                      </Styled.UserImgBox>
+                      <div>{content.userNickname}</div>
+                    </div>
+                    <Styled.DrawerFunction>
+                      <Styled.DotsWrapper onClick={drawerHandler} onBlur={() => setDrawer(false)}>
+                        <img style={{ width: '20px', height: '20px' }} src={myImage} alt="My" />
+                      </Styled.DotsWrapper>
+                      {drawer && (
+                        <Styled.Cruds>
+                          <Styled.Crud
+                            onMouseDown={() => {
+                              navigate(`/update/${params.id}`);
+                            }}
+                          >
+                            수정
+                          </Styled.Crud>
+                          <Styled.Crud onMouseDown={() => delPost(params.id)}>삭제</Styled.Crud>
+                        </Styled.Cruds>
+                      )}
+                    </Styled.DrawerFunction>
                   </Styled.UserBox>
                   <Styled.ContentTitle>{content.title}</Styled.ContentTitle>
                   <Styled.ContentDesc>{content.desc}</Styled.ContentDesc>
