@@ -9,9 +9,6 @@ import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Login from '../../components/Login';
-import Header from '../../components/Header';
-import left_icon from '../../assets/img/left_icon.png';
-import { LeftBtn } from '../Detail/Detail.styles';
 
 function Post() {
   const params = useParams();
@@ -95,7 +92,7 @@ function Post() {
       uid: auth.currentUser.uid, //-->로그인한 사람의 uid
       comments: [],
       userNickname: user.nickname,
-      usrImg: user.userImgUrl
+      userImg: user.userImgUrl
       // userImg: user.Img,
       // 글을 누가 적었는지 확인 가능
       // uid: uid
@@ -142,73 +139,67 @@ function Post() {
   // };
 
   return (
-    <>
-      <Header />
-      <Styled.Layout>
-        <Link to={'/'}>
-          <LeftBtn src={left_icon} alt="뒤로가기" />
-        </Link>
-        {isOpen && <Login setIsOpen={setIsOpen} />}
-        <Styled.Container>
-          <>
-            <div style={{ width: '40%' }}>
-              <Styled.PhotoBox>
-                <Styled.UploadPhoto>
-                  <Styled.FileButton htmlFor="input-file">클릭하여 파일 선택</Styled.FileButton>
-                  <input type="file" onChange={handleFileSelect} id="input-file" style={{ display: 'none' }} />
-                </Styled.UploadPhoto>
-              </Styled.PhotoBox>
-              <Styled.UploadBox>
-                <Styled.UploadButton onClick={handleUpload}>파일 업로드</Styled.UploadButton>
-              </Styled.UploadBox>
-            </div>
+    <Styled.Layout>
+      {isOpen && <Login setIsOpen={setIsOpen} />}
+      <Styled.Container>
+        <>
+          <div style={{ width: '40%' }}>
+            <Styled.PhotoBox>
+              <Styled.UploadPhoto>
+                <Styled.FileButton htmlFor="input-file">클릭하여 파일 선택</Styled.FileButton>
+                <input type="file" onChange={handleFileSelect} id="input-file" style={{ display: 'none' }} />
+              </Styled.UploadPhoto>
+            </Styled.PhotoBox>
+            <Styled.UploadBox>
+              <Styled.UploadButton onClick={handleUpload}>파일 업로드</Styled.UploadButton>
+            </Styled.UploadBox>
+          </div>
 
-            <Styled.TextBox>
-              <Styled.SmallTextBox>
-                <Styled.ContentBox>
-                  <Styled.UserImgBox>
-                    <Styled.UserImg src={user.userImgUrl} />
-                  </Styled.UserImgBox>
-                  <h1>{user.nickname}</h1>
-                </Styled.ContentBox>
-                <div>
-                  <form
-                    onSubmit={function (event) {
-                      event.preventDefault();
-                    }}
-                  >
-                    <Styled.ContentTitle>
-                      <Styled.ContentInputTitle
-                        type="text"
-                        placeholder="Add title"
-                        value={title}
-                        name="title"
-                        onChange={onChangeTitle}
-                        required
-                      />
-                    </Styled.ContentTitle>
-                    <Styled.ContentDesc>
-                      <Styled.ContentInputDesc
-                        type="text"
-                        placeholder="Add description"
-                        value={desc}
-                        name="desc"
-                        onChange={onChangeDesc}
-                      />
-                    </Styled.ContentDesc>
-                    <Styled.ButtonBox>
-                      <Styled.AddButton onClick={addContent}>저장</Styled.AddButton>
-                    </Styled.ButtonBox>
-                  </form>
-                </div>
-                {/* <ContentTitle>{content.title}</ContentTitle>
+          <Styled.TextBox>
+            <Styled.SmallTextBox>
+              <Styled.ContentBox>
+                <Styled.UserImgBox>
+                  <Styled.UserImg src={user.userImgUrl} />
+                </Styled.UserImgBox>
+                <h1>{user.nickname}</h1>
+              </Styled.ContentBox>
+              <div>
+                <form
+                  onSubmit={function (event) {
+                    event.preventDefault();
+                  }}
+                >
+                  <Styled.ContentTitle>
+                    <Styled.ContentInputTitle
+                      type="text"
+                      placeholder="Add title"
+                      value={title}
+                      name="title"
+                      onChange={onChangeTitle}
+                      required
+                    />
+                  </Styled.ContentTitle>
+                  <Styled.ContentDesc>
+                    <Styled.ContentInputDesc
+                      type="text"
+                      placeholder="Add description"
+                      value={desc}
+                      name="desc"
+                      onChange={onChangeDesc}
+                    />
+                  </Styled.ContentDesc>
+                  <Styled.ButtonBox>
+                    <Styled.AddButton onClick={addContent}>저장</Styled.AddButton>
+                  </Styled.ButtonBox>
+                </form>
+              </div>
+              {/* <ContentTitle>{content.title}</ContentTitle>
               <ContentDesc>{content.desc}</ContentDesc> */}
-              </Styled.SmallTextBox>
-            </Styled.TextBox>
-          </>
-        </Styled.Container>
-      </Styled.Layout>
-    </>
+            </Styled.SmallTextBox>
+          </Styled.TextBox>
+        </>
+      </Styled.Container>
+    </Styled.Layout>
   );
 }
 

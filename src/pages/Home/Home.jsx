@@ -61,11 +61,7 @@ function Home() {
                     {content.title}
                     <Styled.UserBox>
                       <Styled.UserImgBox>
-                        <Styled.UserImg
-                          src={
-                            'http://edtkr.com/wp-content/uploads/2022/09/%EC%A7%B1%EA%B5%AC%EA%B7%B9%EC%9E%A5%ED%8C%90_%EC%97%90%EB%93%80%ED%85%8C%ED%81%AC-1.jpg'
-                          }
-                        />
+                        <Styled.UserImg src={content.userImg} />
                       </Styled.UserImgBox>
 
                       <h1>{content.userNickname}</h1>
