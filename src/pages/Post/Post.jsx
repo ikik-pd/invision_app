@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../firebase';
@@ -7,10 +7,11 @@ import * as Styled from './Post.styles';
 import userEvent from '@testing-library/user-event';
 import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Login from '../../components/Login';
 
 function Post() {
+  const params = useParams();
   const [contents, setContents] = useState([]);
   const [user, setUser] = useState({
     //닉네임이나 이미지 설정 안했을 때 초기값 세팅
@@ -23,17 +24,18 @@ function Post() {
   const [desc, setDesc] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadImgUrl, setUploadImgUrl] = useState(null);
+  // const [content, setContent] = useState();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (auth.currentUser === null) {
-    //   alert("로그인이 필요합니다.");
-    //   // console.log(auth.currentUser);
-    //   navigate("/");
-    // }
+    if (auth.currentUser === null) {
+      alert('로그인이 필요합니다.');
+      // console.log(auth.currentUser);
+      navigate('/');
+    }
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         const email = user.email;
@@ -97,11 +99,11 @@ function Post() {
     }; //-->처음에만 댓글 빈배열
 
     setContents(newContent);
+
     setTitle('');
     setDesc('');
 
     const collectionRef = collection(db, 'contents');
-
     await addDoc(collectionRef, newContent);
   };
 
@@ -126,6 +128,7 @@ function Post() {
     //파일 URL 가져오기
     const downloadURL = await getDownloadURL(imageRef);
     console.log('downloadURL', downloadURL);
+
     setUploadImgUrl(downloadURL);
   };
 
