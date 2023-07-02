@@ -1,17 +1,18 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
-import Header from "../components/Header";
-import Login from "../components/Login";
-import {onAuthStateChanged} from "firebase/auth";
-import {auth, db, storage} from "../firebase";
-import {doc, getDoc, setDoc} from "firebase/firestore";
-import uuid from "react-uuid";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Header from '../components/Header';
+import Login from '../components/Login';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db, storage } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import uuid from 'react-uuid';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Footer from '../components/Footer';
 
 function Mypage() {
   const initialState = {
-    nickname: "",
-    email: "",
+    nickname: '',
+    email: ''
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -26,16 +27,16 @@ function Mypage() {
         const email = user.email;
         const uid = user.uid;
 
-        console.log("로그인 회원 정보 : ", uid, " ", email);
+        console.log('로그인 회원 정보 : ', uid, ' ', email);
 
         const fetchData = async () => {
-          const snapUser = await getDoc(doc(db, "users", uid));
+          const snapUser = await getDoc(doc(db, 'users', uid));
 
           if (snapUser.exists()) {
             // console.log(snapUser.data());
             setUser(snapUser.data());
           } else {
-            console.log("No such document");
+            console.log('No such document');
           }
         };
         fetchData();
@@ -44,7 +45,7 @@ function Mypage() {
     });
   }, []);
 
-  console.log("user UID: ", user);
+  console.log('user UID: ', user);
 
   const handleFileSelect = async (event) => {
     await setSelectedFile(event.target.files[0]);
@@ -54,10 +55,10 @@ function Mypage() {
 
     const downloadURL = await getDownloadURL(imageRef);
     await setUploadImgUrl(downloadURL);
-    console.log("imgURL: ", downloadURL);
+    console.log('imgURL: ', downloadURL);
 
-    await setDoc(doc(db, "users", user.uid), {
-      userImgUrl: downloadURL,
+    await setDoc(doc(db, 'users', user.uid), {
+      userImgUrl: downloadURL
     });
   };
 
@@ -100,6 +101,7 @@ function Mypage() {
           </FeedWrapper>
         </Inner>
       </Layout>
+      <Footer />
     </>
   );
 }
@@ -107,6 +109,7 @@ function Mypage() {
 const Layout = styled.div`
   width: 100%;
   height: 100%;
+  margin-bottom: 150px;
 `;
 
 const Inner = styled.div`
