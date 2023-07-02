@@ -111,6 +111,8 @@ function ShowDetail() {
     await updateDoc(contentRef, newContent); //-->데이터베이스 업데이트
   };
 
+  console.log('content : ', params.id.userImg);
+
   return (
     <>
       <Header />
@@ -137,7 +139,7 @@ function ShowDetail() {
                       }}
                     >
                       <Styled.UserImgBox>
-                        <Styled.UserImg src={content.userImgUrl} />
+                        <Styled.UserImg src={content.userImg} />
                       </Styled.UserImgBox>
                       <div>{content.userNickname}</div>
                     </div>
