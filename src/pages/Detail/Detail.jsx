@@ -29,43 +29,6 @@ function ShowDetail() {
   };
 
   // 삭제
-
-  const delPost = async (id) => {
-    try {
-      const forReal = window.confirm('삭제할까요?');
-      if (!forReal) return false;
-
-      const delContents = await getDoc(doc(db, 'contents', params.id));
-      const user = auth.currentUser.uid;
-      if (delContents.exists()) {
-        if (user === delContents.data().uid) {
-          alert('삭제 완료');
-        } else {
-          // 본인이 작성하지 않았을 때 알럿창이 안뜸
-          window.alert('로그인해 주세요.');
-        }
-        setContent(delContents.data());
-      }
-
-      const postDel = doc(db, 'contents', id);
-      await deleteDoc(postDel);
-      navigate('/');
-    } catch (error) {
-      window.alert('로그인해 주세요.');
-    }
-  };
-
-  // 수정
-  const [isUpdated, setIsUpdated] = useState(false);
-
-  // 수정&삭제 버튼 모음
-  const [drawer, setDrawer] = useState(false);
-  const drawerHandler = () => {
-    setDrawer(true);
-  };
-
-  // 삭제
-
   const delPost = async (id) => {
     try {
       const forReal = window.confirm('삭제할까요?');
