@@ -1,35 +1,35 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
-import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut} from "firebase/auth";
-import {auth, db} from "../firebase";
-import {doc, setDoc} from "firebase/firestore";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
-const Login = ({setIsOpen}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nickname, setNickname] = useState("");
+const Login = ({ setIsOpen }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         const email = user.email;
         const uid = user.uid;
-        console.log("로그인 회원 정보 : ", uid, " ", email);
+        console.log('로그인 회원 정보 : ', uid, ' ', email);
       }
     });
   }, []);
 
   const onChange = (event) => {
     const {
-      target: {name, value},
+      target: { name, value }
     } = event;
-    if (name === "email") {
+    if (name === 'email') {
       setEmail(value);
     }
-    if (name === "password") {
+    if (name === 'password') {
       setPassword(value);
     }
-    if (name === "nickname") {
+    if (name === 'nickname') {
       setNickname(value);
     }
   };
@@ -39,15 +39,15 @@ const Login = ({setIsOpen}) => {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("로그인 성공");
-      setEmail("");
-      setPassword("");
-      setNickname("");
+      console.log('로그인 성공');
+      setEmail('');
+      setPassword('');
+      setNickname('');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
 
-      console.log("error with signUp", errorCode, errorMessage);
+      console.log('error with signUp', errorCode, errorMessage);
     }
   };
   const logOut = async (event) => {
@@ -55,34 +55,35 @@ const Login = ({setIsOpen}) => {
 
     try {
       const userLogout = await signOut(auth);
-      console.log("로그아웃 완료");
+      console.log('로그아웃 완료');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("error with logOut", errorCode, errorMessage);
+      console.log('error with logOut', errorCode, errorMessage);
     }
   };
   const signUp = async (event) => {
     event.preventDefault();
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("회원가입 성공");
+      console.log('회원가입 성공');
 
       // console.log(userCredential.user.uid);
       //users 컬렉션에 로그인한 사람의 정보 저장를 userCredential.user.uid로 판별
-      await setDoc(doc(db, "users", userCredential.user.uid), {
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        id: userCredential.user.uid,
         email: email,
         nickname: nickname,
         //마이페이지에서 프로필 사진 변경할 수 있음
-        userImgUrl: "",
+        userImgUrl: ''
       });
-      setEmail("");
-      setPassword("");
-      setNickname("");
+      setEmail('');
+      setPassword('');
+      setNickname('');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("error with signUp", errorCode, errorMessage);
+      console.log('error with signUp', errorCode, errorMessage);
     }
   };
 
@@ -105,15 +106,36 @@ const Login = ({setIsOpen}) => {
           <form>
             <LoginInputWrapper>
               <LoginLabel>닉네임</LoginLabel>
-              <LoginInput placeholder="닉네임" type="nickname" value={nickname} name="nickname" onChange={onChange} required></LoginInput>
+              <LoginInput
+                placeholder="닉네임"
+                type="nickname"
+                value={nickname}
+                name="nickname"
+                onChange={onChange}
+                required
+              ></LoginInput>
             </LoginInputWrapper>
             <LoginInputWrapper>
               <LoginLabel>이메일</LoginLabel>
-              <LoginInput placeholder="이메일" type="email" value={email} name="email" onChange={onChange} required></LoginInput>
+              <LoginInput
+                placeholder="이메일"
+                type="email"
+                value={email}
+                name="email"
+                onChange={onChange}
+                required
+              ></LoginInput>
             </LoginInputWrapper>
             <LoginInputWrapper>
               <LoginLabel>비밀번호</LoginLabel>
-              <LoginInput placeholder="비밀번호" type="password" value={password} name="password" onChange={onChange} required></LoginInput>
+              <LoginInput
+                placeholder="비밀번호"
+                type="password"
+                value={password}
+                name="password"
+                onChange={onChange}
+                required
+              ></LoginInput>
             </LoginInputWrapper>
 
             <LoginButton onClick={signIn}>로그인</LoginButton>
@@ -165,7 +187,7 @@ const LoginLabel = styled.label`
   margin-bottom: 5px;
 `;
 
-const LoginInput = styled.input.attrs({required: true})`
+const LoginInput = styled.input.attrs({ required: true })`
   width: 100%;
   font-size: 16px;
   padding: 14px 16px;

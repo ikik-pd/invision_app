@@ -1,4 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+
+export const LeftBtn = styled.img`
+  width: 45px;
+  margin-right: 50px;
+`;
 
 export const Layout = styled.div`
   max-width: 1200px;
@@ -10,20 +15,18 @@ export const Layout = styled.div`
 
   justify-content: center;
 
-  margin: 300px auto;
+  margin: 130px auto;
 `;
 export const Container = styled.div`
-  font-family: "Cafe24Ssurround";
+  font-family: 'Cafe24Ssurround';
   /* color: burlywood; */
   /* border: 2px solid burlywood; */
   box-shadow: 5px 5px 20px 5px #e5e5e5;
   border-radius: 30px;
   display: flex;
 
-  width: 950px;
-  height: 800px;
-
-  /* margin: auto; */
+  width: 670px;
+  height: 600px;
   padding: 20px;
 `;
 
@@ -99,6 +102,7 @@ export const SmallTextBox = styled.div`
 export const UserBox = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 export const UserImg = styled.img`
   width: 50px;
@@ -109,9 +113,10 @@ export const UserImg = styled.img`
 /* object-fit: contain; */
 
 export const UserImgBox = styled.div`
+  /* display: flex; */
   width: 50px;
   height: 50px;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 50px;
   margin-right: 10px;
 `;
@@ -189,4 +194,44 @@ export const FormInput = styled.input`
 
   font-size: 20px;
   padding-left: 20px;
+`;
+
+export const Crud = styled.li`
+  text-align: center;
+  padding: 5px;
+  font-size: 15px;
+  &:hover {
+    background-color: #dcdcdc;
+  }
+`;
+
+export const Cruds = styled.ul`
+  cursor: pointer;
+  position: absolute;
+  width: 50px;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+`;
+
+export const DotsWrapper = styled.button`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: white;
+
+  &:hover {
+    background-color: #ff385c;
+    color: #fff;
+    transition: 0.3s ease;
+  }
+`;
+
+export const DrawerFunction = styled.div`
+  position: relative;
 `;

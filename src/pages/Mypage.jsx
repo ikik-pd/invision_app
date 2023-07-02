@@ -1,17 +1,29 @@
-import React, {useEffect, useState} from "react";
-import styled from "styled-components";
-import Header from "../components/Header";
-import Login from "../components/Login";
-import {onAuthStateChanged} from "firebase/auth";
-import {auth, db, storage} from "../firebase";
-import {doc, getDoc, setDoc} from "firebase/firestore";
-import uuid from "react-uuid";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Header from '../components/Header';
+import Login from '../components/Login';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db, storage } from '../firebase';
+import { addDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import uuid from 'react-uuid';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import Footer from '../components/Footer';
 
 function Mypage() {
   const initialState = {
-    nickname: "",
-    email: "",
+    nickname: '',
+    email: '',
+    userImg: ''
+  };
+
+  const contentState = {
+    comments: '',
+    desc: '',
+    imgUrl: '',
+    title: '',
+    uid: '',
+    userImg: '',
+    userNickname: ''
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -26,16 +38,15 @@ function Mypage() {
         const email = user.email;
         const uid = user.uid;
 
-        console.log("로그인 회원 정보 : ", uid, " ", email);
+        console.log('로그인 회원 정보 : ', uid, ' ', email);
 
         const fetchData = async () => {
-          const snapUser = await getDoc(doc(db, "users", uid));
+          const snapUser = await getDoc(doc(db, 'users', uid));
 
           if (snapUser.exists()) {
-            // console.log(snapUser.data());
             setUser(snapUser.data());
           } else {
-            console.log("No such document");
+            console.log('No such document');
           }
         };
         fetchData();
@@ -44,21 +55,22 @@ function Mypage() {
     });
   }, []);
 
-  console.log("user UID: ", user);
+  const uploadHandler = (event) => {
+    handleFileSelect(event.target.files[0]);
+  };
 
-  const handleFileSelect = async (event) => {
-    await setSelectedFile(event.target.files[0]);
-
-    const imageRef = ref(storage, `forder/${uuid()}`);
-    await uploadBytes(imageRef, selectedFile);
-
+  const handleFileSelect = async (file) => {
+    const imageRef = ref(storage, `folder/${user.email}`);
+    await uploadBytes(imageRef, file);
+    // 스토리지에 저장된 url 불러와서, 저장
     const downloadURL = await getDownloadURL(imageRef);
-    await setUploadImgUrl(downloadURL);
-    console.log("imgURL: ", downloadURL);
 
-    await setDoc(doc(db, "users", user.uid), {
-      userImgUrl: downloadURL,
+    await setDoc(doc(db, 'users', auth.currentUser?.uid), {
+      ...user,
+      userImg: downloadURL
     });
+
+    window.location.reload();
   };
 
   return (
@@ -75,11 +87,22 @@ function Mypage() {
         {isOpen && <Login setIsOpen={setIsOpen} />}
         <Inner>
           <ProfileWrapper>
-            <ProfileImg></ProfileImg>
-            <input onClick={handleFileSelect} type="file"></input>
+            <FigureImg>
+              <ProfileLabel htmlFor="input-file">
+                <ProfileImg src={user.userImg} />
+              </ProfileLabel>
+            </FigureImg>
+
+            <input
+              id="input-file"
+              type="file"
+              accept="image/jpg, image/jpeg, image/png"
+              onChange={uploadHandler}
+              style={{ display: 'none' }}
+            ></input>
             <ProfileName>{user.nickname}</ProfileName>
             <ProfileId>{user.email}</ProfileId>
-            <ProfileEditButton>설정</ProfileEditButton>
+            {/* <ProfileEditButton>설정</ProfileEditButton> */}
           </ProfileWrapper>
 
           <FeedWrapper>
@@ -88,18 +111,12 @@ function Mypage() {
             </FeedTitle>
 
             <FeedCardWrapper>
-              <FeedCard>
-                <FeedCardFigure>
-                  <FeedCardImg></FeedCardImg>
-                  <FeedCardImgOverlay></FeedCardImgOverlay>
-                </FeedCardFigure>
-
-                <FeedCardTitle>미니멀리즘을 추구하는 조명</FeedCardTitle>
-              </FeedCard>
+              <div>hello world</div>
             </FeedCardWrapper>
           </FeedWrapper>
         </Inner>
       </Layout>
+      <Footer />
     </>
   );
 }
@@ -107,6 +124,7 @@ function Mypage() {
 const Layout = styled.div`
   width: 100%;
   height: 100%;
+  margin-bottom: 150px;
 `;
 
 const Inner = styled.div`
@@ -120,16 +138,25 @@ const ProfileWrapper = styled.div`
   text-align: center;
 `;
 
-const ProfileImg = styled.div`
+const FigureImg = styled.div`
   width: 90px;
   height: 90px;
-  background-image: url();
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: #efefef;
+  overflow: hidden;
+  object-fit: cover;
   border-radius: 100%;
   margin: 0 auto;
+`;
+
+const ProfileLabel = styled.label`
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+`;
+
+const ProfileImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ProfileName = styled.h2`
