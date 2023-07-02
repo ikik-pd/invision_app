@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../firebase';
 import uuid from 'react-uuid';
 import * as Styled from './Post.styles';
-import userEvent from '@testing-library/user-event';
 import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate, useParams, Link } from 'react-router-dom';

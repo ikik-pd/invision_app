@@ -40,6 +40,7 @@ const DropLiTag = styled.li`
   &:hover {
     color: #ff385c;
     font-weight: bold;
+    cursor: pointer;
   }
 `;
 
