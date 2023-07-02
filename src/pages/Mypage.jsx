@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Login from '../components/Login';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db, storage } from '../firebase';
-import { addDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { addDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import Footer from '../components/Footer';
@@ -28,6 +28,7 @@ function Mypage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(initialState);
+  const [preview, setPreview] = useState(null);
 
   const [selectedFile, setSelectedFile] = useState();
   const [uploadImgUrl, setUploadImgUrl] = useState(null);
@@ -45,6 +46,7 @@ function Mypage() {
 
           if (snapUser.exists()) {
             setUser(snapUser.data());
+            setPreview(snapUser.data().userImgUrl);
           } else {
             console.log('No such document');
           }
@@ -57,6 +59,8 @@ function Mypage() {
 
   const uploadHandler = (event) => {
     handleFileSelect(event.target.files[0]);
+    let image = URL.createObjectURL(event.target.files[0]);
+    setPreview(image);
   };
 
   const handleFileSelect = async (file) => {
@@ -65,12 +69,11 @@ function Mypage() {
     // 스토리지에 저장된 url 불러와서, 저장
     const downloadURL = await getDownloadURL(imageRef);
 
-    await setDoc(doc(db, 'users', auth.currentUser?.uid), {
-      ...user,
-      userImg: downloadURL
+    await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
+      userImgUrl: downloadURL
     });
 
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
@@ -89,7 +92,7 @@ function Mypage() {
           <ProfileWrapper>
             <FigureImg>
               <ProfileLabel htmlFor="input-file">
-                <ProfileImg src={user.userImg} />
+                <ProfileImg src={preview} />
               </ProfileLabel>
             </FigureImg>
 
