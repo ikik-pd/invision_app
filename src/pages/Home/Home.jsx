@@ -16,6 +16,7 @@ function Home() {
       const q = query(collection(db, 'contents'));
       const querySnapshot = await getDocs(q);
 
+      console.log('content data : ', querySnapshot);
       const initialComments = [];
 
       // document의 id와 데이터를 initialTodos에 저장합니다.
