@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../firebase';
 import uuid from 'react-uuid';
 import * as Styled from './Post.styles';
-import userEvent from '@testing-library/user-event';
 import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate, Link } from 'react-router-dom';
@@ -35,7 +34,7 @@ function Post() {
     if (auth.currentUser === null) {
       alert('로그인이 필요합니다.');
       // console.log(auth.currentUser);
-      // navigate("/");
+      navigate('/');
     }
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
@@ -93,7 +92,7 @@ function Post() {
       uid: auth.currentUser.uid, //-->로그인한 사람의 uid
       comments: [],
       userNickname: user.nickname,
-      usrImg: user.userImgUrl
+      userImg: user.userImgUrl
       // userImg: user.Img,
       // 글을 누가 적었는지 확인 가능
       // uid: uid

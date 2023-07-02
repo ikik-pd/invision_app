@@ -6,6 +6,7 @@ function Footer() {
   return (
     <FOOTER>
       <FOOTERLOGO src={In_VISION_white_logo} alt="로고" />
+
       <COPYRIGHT>Copyright 2023. VISION-6조. All rights reserved.</COPYRIGHT>
       <GITLOGO
         src={gitLogo}

@@ -8,8 +8,8 @@ import { Link, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
 import * as Styled from './Detail.styles';
 import Header from '../../components/Header';
-import { LeftBtn } from '../Detail/Detail.styles';
 import left_icon from '../../assets/img/left_icon.png';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function ShowDetail() {
   // const navigate = useNavigate();
@@ -17,7 +17,7 @@ function ShowDetail() {
 
   // console.log(params);
   const [content, setContent] = useState(null);
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,13 +31,14 @@ function ShowDetail() {
         console.log('No such document');
       }
       // users 컬렉션 정보 가져옴
-      // const snapUser = await getDoc(doc(db, "users", auth.currentUser.uid));
+
+      // const snapUser = await getDoc(doc(db, 'users', auth.currentUser.uid));
 
       // if (snapUser.exists()) {
       //   console.log(snapUser.data());
       //   setUser(snapUser.data());
       // } else {
-      //   console.log("No such document");
+      //   console.log('No such document');
       // }
     };
 
@@ -45,23 +46,26 @@ function ShowDetail() {
   }, []);
 
   // 댓글
-  const [text, setText] = useState('');
+
+  const [comment, setComment] = useState('');
   const onChange = (event) => {
     const {
       target: { name, value }
     } = event;
-    if (name === 'text') {
-      setText(value);
+    if (name === 'comment') {
+      setComment(value);
     }
+    console.log(comment);
   };
 
   // 댓글 추가
   const addComment = async (event) => {
     event.preventDefault();
 
-    const comments = [...content.comments, text];
+    const comments = [...content.comments, comment];
     const newContent = { ...content, comments };
-    setText('');
+    setComment('');
+
     setContent(newContent); //-->페이지에서 보여지는 부분 업데이트
     //contents 컬렉션에서 문서 id에 해당하는 contentRef
     const contentRef = doc(db, 'contents', params.id);
@@ -98,6 +102,7 @@ function ShowDetail() {
                 </Styled.SmallTextBox>
                 <Styled.ListBox>
                   <Styled.H1>COMMENT ▼</Styled.H1>
+
                   <Styled.CommentListBox>
                     {content.comments.map(function (comment) {
                       // console.log(comment.id);
@@ -111,11 +116,19 @@ function ShowDetail() {
 
                   <div>
                     <Styled.ListBoxForm onSubmit={addComment}>
+                      {/* <Styled.FormInput
+                        type="text"
+                        placeholder="leave commenter"
+                        value={commenter}
+                        name="commenter"
+                        onChange={onChangeCommenter}
+                        required
+                      ></Styled.FormInput> */}
                       <Styled.FormInput
                         type="text"
                         placeholder="leave comment"
-                        value={text}
-                        name="text"
+                        value={comment}
+                        name="comment"
                         onChange={onChange}
                         required
                       ></Styled.FormInput>
