@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ setIsOpen }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
@@ -43,6 +45,8 @@ const Login = ({ setIsOpen }) => {
       setEmail('');
       setPassword('');
       setNickname('');
+      alert('로그인 되었습니다.');
+      setIsOpen(false);
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -56,6 +60,8 @@ const Login = ({ setIsOpen }) => {
     try {
       const userLogout = await signOut(auth);
       console.log('로그아웃 완료');
+      alert('로그아웃 되었습니다.');
+      navigate('/');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -67,6 +73,7 @@ const Login = ({ setIsOpen }) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       console.log('회원가입 성공');
+      alert('회원가입이 완료되었습니다.');
 
       // console.log(userCredential.user.uid);
       //users 컬렉션에 로그인한 사람의 정보 저장를 userCredential.user.uid로 판별
@@ -91,13 +98,13 @@ const Login = ({ setIsOpen }) => {
     <>
       <Layout>
         <LoginWrapper>
-          <button
+          <CloseButton
             onClick={() => {
               setIsOpen(false);
             }}
           >
-            닫기
-          </button>
+            X
+          </CloseButton>
           <LoginTitle>
             In-vision에 오신것을
             <br />
@@ -137,10 +144,11 @@ const Login = ({ setIsOpen }) => {
                 required
               ></LoginInput>
             </LoginInputWrapper>
-
-            <LoginButton onClick={signIn}>로그인</LoginButton>
-            <SignUpButton onClick={signUp}>회원가입</SignUpButton>
-            <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+            <ButtonGroup>
+              <LoginButton onClick={signIn}>로그인</LoginButton>
+              <SignUpButton onClick={signUp}>회원가입</SignUpButton>
+              <LogoutButton onClick={logOut}>로그아웃</LogoutButton>
+            </ButtonGroup>
           </form>
         </LoginWrapper>
       </Layout>
@@ -151,7 +159,7 @@ const Login = ({ setIsOpen }) => {
 const Layout = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  /* background-color: rgba(0, 0, 0, 0.6); */
   position: absolute;
   top: 0;
   z-index: 99;
@@ -159,8 +167,9 @@ const Layout = styled.div`
 
 const LoginWrapper = styled.div`
   position: absolute;
+
   top: 50%;
-  left: 50%;
+  right: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 30px;
@@ -201,6 +210,10 @@ const LoginInput = styled.input.attrs({ required: true })`
   }
 `;
 
+const ButtonGroup = styled.div`
+  display: block;
+  width: 100%;
+`;
 const LoginButton = styled.button`
   width: 100%;
   padding: 12px 0;
@@ -209,7 +222,7 @@ const LoginButton = styled.button`
   background-color: #000;
   border-radius: 30px;
   font-size: 16px;
-  margin-top: 10px;
+  margin-top: 20px;
   transition: 0.3s ease;
 
   &:hover {
@@ -220,17 +233,54 @@ const LoginButton = styled.button`
 `;
 
 const SignUpButton = styled.button`
+  width: 100%;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+
+  padding: 12px 0;
+  color: #fff;
+  font-weight: 900;
+  background-color: #000;
+  border-radius: 30px;
   font-size: 16px;
-  font-weight: 700;
-  margin-top: 24px;
+  margin-top: 10px;
+  &:hover {
+    background-color: #ff385c;
+    color: #fff;
+    transition: 0.3s ease;
+  }
 `;
 
 const LogoutButton = styled.button`
   font-size: 16px;
   font-weight: 700;
   color: #999;
+  width: 100%;
+  position: relative;
+
+  padding: 12px 0;
+  color: black;
+  border: 1px solid black;
+  border-radius: 30px;
+  margin-top: 10px;
+  &:hover {
+    background-color: black;
+    color: #fff;
+    transition: 0.3s ease;
+  }
+`;
+const CloseButton = styled.button`
+  font-size: 16px;
+  font-weight: 700;
+  color: black;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  float: right;
+
+  &:hover {
+    background-color: black;
+    color: #fff;
+    transition: 0.3s ease;
+  }
 `;
 export default Login;

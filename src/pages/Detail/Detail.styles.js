@@ -9,8 +9,6 @@ export const Layout = styled.div`
   max-width: 1200px;
   min-width: 1000px;
 
-  /* box-sizing: border-box; */
-  /* text-align: center; */
   display: flex;
 
   justify-content: center;
@@ -19,8 +17,7 @@ export const Layout = styled.div`
 `;
 export const Container = styled.div`
   font-family: 'Cafe24Ssurround';
-  /* color: burlywood; */
-  /* border: 2px solid burlywood; */
+
   box-shadow: 5px 5px 20px 5px #e5e5e5;
   border-radius: 30px;
   display: flex;
@@ -31,22 +28,9 @@ export const Container = styled.div`
 `;
 
 export const ContentDesc = styled.div`
-  font-size: 1.3em;
+  font-size: 1.2em;
   line-height: 140%;
   overflow-y: auto;
-  /* word-break: break-all */
-  /* word-break: break-word */
-  /* padding: 10px; */
-  word-wrap: break-word;
-
-  &::-webkit-scrollbar {
-    width: 20px;
-    background-color: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: white;
-  }
 `;
 
 export const Backbutton = styled.button`
@@ -65,7 +49,6 @@ export const Backbutton = styled.button`
 `;
 
 export const PhotoBox = styled.div`
-  /* background-color: #ff385c; */
   border-radius: 30px;
   overflow: hidden;
   width: 50%;
@@ -75,34 +58,34 @@ export const PhotoBox = styled.div`
 export const PhotoImg = styled.img`
   width: 100%;
   border-radius: 30px;
-
-  /* object-fit: contain; */
 `;
 
 export const TextBox = styled.div`
-  /* background-color: lightgrey; */
   border-radius: 30px;
   width: 50%;
   height: 100%;
-  /* margin-left: 40px; */
+
   box-sizing: border-box;
   padding-left: 35px;
   padding-right: 20px;
 `;
 
 export const SmallTextBox = styled.div`
-  /* border: 1px solid black; */
   border-radius: 30px;
   width: 100%;
   height: 50%;
 
   box-sizing: border-box;
-  padding-top: 40px;
+  padding-top: 20px;
 `;
 export const UserBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+export const UserInfoBox = styled.div`
+  display: flex;
+  align-items: center;
 `;
 export const UserImg = styled.img`
   width: 50px;
@@ -110,49 +93,58 @@ export const UserImg = styled.img`
   object-fit: cover;
   border-radius: 50px;
 `;
-/* object-fit: contain; */
 
 export const UserImgBox = styled.div`
-  /* display: flex; */
   width: 50px;
   height: 50px;
-  /* overflow: hidden; */
+
   border-radius: 50px;
   margin-right: 10px;
 `;
 
 export const ContentTitle = styled.div`
-  font-size: 2.5em;
+  width: 100%;
+  font-size: 2em;
+  line-height: 120%;
   font-weight: bold;
-  margin: 30px 0;
+  margin: 20px 0;
+
+  overflow-y: auto;
+  box-sizing: border-box;
+  word-break: break-word;
+  padding-top: 10px;
+
+  &::-webkit-scrollbar {
+    width: 20px;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: white;
+  }
 `;
 export const ListBox = styled.div`
-  /* border: 1px solid black; */
   border-radius: 30px;
   width: 100%;
-  height: 50%;
-  /* margin-top: 20px; */
+  height: 300px;
 
   box-sizing: border-box;
-  padding-top: 20px;
+  padding-top: 50px;
 `;
 export const H1 = styled.h1`
   font-size: 1.5em;
   font-weight: bold;
 `;
 export const CommentListBox = styled.div`
-  /* border: 1px solid black; */
-  /* border-radius: 30px; */
-
   width: 100%;
   height: 65%;
-  margin-top: 30px;
+  margin-top: 15px;
 
   box-sizing: border-box;
   overflow-y: auto;
-  /* word-break: break-all */
-  /* word-break: break-word */
-  /* padding: 10px; */
+
+  word-break: break-word;
+  padding: 10px;
   word-wrap: break-word;
 
   &::-webkit-scrollbar {
@@ -172,14 +164,14 @@ export const CommentBox = styled.div`
   box-sizing: border-box;
 `;
 export const Comment = styled.div`
-  font-size: 1.2em;
+  font-size: 1em;
 
   box-sizing: border-box;
 `;
 export const ListBoxForm = styled.form`
   width: 100%;
   height: 35px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 
   box-sizing: border-box;
 `;
