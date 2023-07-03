@@ -1,11 +1,10 @@
-import { addDoc, collection, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../firebase';
 import uuid from 'react-uuid';
 import * as Styled from './Update.styles';
-import userEvent from '@testing-library/user-event';
-import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
+
 import { auth } from '../../firebase';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Header from '../../components/Header';
@@ -18,11 +17,9 @@ function Update() {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      // contents컬렉션에서 해당 게시물 정보 가져옴
       const snapContent = await getDoc(doc(db, 'contents', params.id));
       console.log(snapContent);
       if (snapContent.exists()) {
@@ -99,14 +96,16 @@ function Update() {
       title: title,
       desc: desc,
       imgUrl: uploadImgUrl,
-      uid: auth.currentUser.uid, //-->로그인한 사람의 uid
+      uid: auth.currentUser.uid,
       comments: [],
       userNickname: user.nickname,
       userImg: user.userImgUrl
-    }; //-->처음에만 댓글 빈배열
+    };
 
     setContents(newContent);
     handleUpload();
+    alert('수정이 완료되었습니다.');
+    navigate('/');
 
     await updateDoc(doc(db, 'contents', params.id), {
       title,
@@ -131,7 +130,7 @@ function Update() {
     const downloadURL = await getDownloadURL(imageRef);
     await updateDoc(doc(db, 'contents', params.id), {
       imgUrl: downloadURL
-    }); // 태그에도 img URL , firebase img URL = 렌더가 안됩니다.?
+    });
   };
 
   return (
@@ -143,7 +142,7 @@ function Update() {
         </Link>
         <Styled.Container>
           <>
-            <div style={{ width: '40%' }}>
+            <div style={{ width: '50%' }}>
               {content && (
                 <Styled.PhotoBox>
                   <img src={content.imgUrl} />
@@ -195,8 +194,6 @@ function Update() {
                     </Styled.ButtonBox>
                   </form>
                 </div>
-                {/* <ContentTitle>{content.title}</ContentTitle>
-              <ContentDesc>{content.desc}</ContentDesc> */}
               </Styled.SmallTextBox>
             </Styled.TextBox>
           </>

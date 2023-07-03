@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Header from '../components/Header';
-import Login from '../components/Login';
+import Header from '../../components/Header';
+
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db, storage } from '../firebase';
-import { addDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import uuid from 'react-uuid';
+import { auth, db, storage } from '../../firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import Footer from '../components/Footer';
+import Footer from '../../components/Footer';
 
 function Mypage() {
   const initialState = {
@@ -16,22 +15,8 @@ function Mypage() {
     userImg: ''
   };
 
-  const contentState = {
-    comments: '',
-    desc: '',
-    imgUrl: '',
-    title: '',
-    uid: '',
-    userImg: '',
-    userNickname: ''
-  };
-
-  const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(initialState);
   const [preview, setPreview] = useState(null);
-
-  const [selectedFile, setSelectedFile] = useState();
-  const [uploadImgUrl, setUploadImgUrl] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -66,28 +51,18 @@ function Mypage() {
   const handleFileSelect = async (file) => {
     const imageRef = ref(storage, `folder/${user.email}`);
     await uploadBytes(imageRef, file);
-    // 스토리지에 저장된 url 불러와서, 저장
+
     const downloadURL = await getDownloadURL(imageRef);
 
     await updateDoc(doc(db, 'users', auth.currentUser?.uid), {
       userImgUrl: downloadURL
     });
-
-    // window.location.reload();
   };
 
   return (
     <>
       <Header />
       <Layout>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          로그인
-        </button>
-        {isOpen && <Login setIsOpen={setIsOpen} />}
         <Inner>
           <ProfileWrapper>
             <FigureImg>
@@ -105,7 +80,6 @@ function Mypage() {
             ></input>
             <ProfileName>{user.nickname}</ProfileName>
             <ProfileId>{user.email}</ProfileId>
-            {/* <ProfileEditButton>설정</ProfileEditButton> */}
           </ProfileWrapper>
 
           <FeedWrapper>
@@ -114,7 +88,7 @@ function Mypage() {
             </FeedTitle>
 
             <FeedCardWrapper>
-              <div>hello world</div>
+              <div></div>
             </FeedCardWrapper>
           </FeedWrapper>
         </Inner>

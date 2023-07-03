@@ -41,7 +41,7 @@ export const UploadBox = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 10px;
-  height: 20%;
+  height: 18%;
   width: 100%;
   background-color: lightgray;
   border-radius: 30px;
@@ -110,7 +110,7 @@ export const ContentDesc = styled.div`
 `;
 
 export const ContentInputDesc = styled.textarea`
-  font-size: 1.3em;
+  font-size: 1.5em;
   line-height: 140%;
   width: 370px;
   height: 320px;

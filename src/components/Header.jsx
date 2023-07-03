@@ -17,12 +17,6 @@ function Header() {
     setDropdownView(!isDropdownView);
   };
 
-  const handleBlurContainer = () => {
-    setTimeout(() => {
-      setDropdownView(false);
-    }, 200);
-  };
-
   return (
     <HEADER_ST>
       <Link to={'/'}>
@@ -46,7 +40,7 @@ function Header() {
 
         {/* <Link to={`/showdetail`}> */}
         <USERICON_ST src={userIcon} alt="사용자 아이콘" onClick={handleClickContainer} />
-        <div onBlur={handleBlurContainer}>{isDropdownView && <Dropdown />}</div>
+        <div>{isDropdownView && <Dropdown />}</div>
         {/* </Link> */}
       </RIGHTBOX_ST>
     </HEADER_ST>
