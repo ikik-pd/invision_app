@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home/Home';
 import Detail from '../pages/Detail/Detail';
-import Mypage from '../pages/Mypage';
+import Mypage from '../pages/Mypage/Mypage';
 import Post from '../pages/Post/Post';
 import Update from '../pages/Update/Update';
 

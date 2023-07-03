@@ -11,7 +11,7 @@ function Footer() {
       <GITLOGO
         src={gitLogo}
         alt="깃 로고"
-        onClick={() => window.open('https://github.com/ikik-pd/invision', '_blank')}
+        onClick={() => window.open('https://github.com/ikik-pd/invision_app', '_blank')}
       />
     </FOOTER>
   );
